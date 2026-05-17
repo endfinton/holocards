@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+AI_LOG.md
 
 # next.js
 /.next/
@@ -19,6 +20,8 @@
 
 # production
 /build
+/docs
+
 
 # misc
 .DS_Store

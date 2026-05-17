@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HoloCard Vault 3D
 
-## Getting Started
+HoloCard Vault 3D será una plataforma web para buscar, visualizar y coleccionar cartas de **Magic: The Gathering**. El objetivo es combinar una experiencia visual atractiva con una base técnica escalable: búsqueda de cartas, autenticación, colección privada y visor 3D con efecto foil.
 
-First, run the development server:
+## Estado actual
+
+Proyecto en fase inicial.
+
+- Fase 1 iniciada: proyecto Next.js creado y dependencias principales instaladas.
+- Estructura activa del proyecto alineada bajo `src/app`.
+- Pendiente: base de datos, autenticación, integración con Scryfall, APIs propias, visor 3D e interfaz final.
+
+## Cómo ejecutar el proyecto
+
+### Requisitos
+
+- Node.js
+- pnpm
+
+### Instalación
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Desarrollo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Luego abre:
 
-## Learn More
+```text
+http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Compilación
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Cómo interactuar con la aplicación
 
-## Deploy on Vercel
+Por ahora la app muestra la pantalla inicial generada por Next.js. En fases posteriores permitirá:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. buscar cartas reales desde Scryfall
+2. iniciar sesión
+3. guardar cartas en una colección personal
+4. inspeccionar cartas en 3D con efecto foil
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Estructura del proyecto
+
+```text
+src/
+├── app/
+│   ├── api/
+│   ├── collection/
+│   ├── search/
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
+├── components/
+│   ├── 3d/
+│   ├── ui/
+│   └── layout/
+├── db/
+├── lib/
+├── services/
+├── hooks/
+└── styles/
+```
+
+## Decisiones técnicas
+
+### Next.js
+
+Se usa Next.js porque ofrece routing, renderizado moderno, soporte para API routes y una buena base para desplegar en Vercel sin añadir infraestructura innecesaria.
+
+### TypeScript
+
+TypeScript reduce errores tempranos y hace más claro el contrato entre servicios, componentes y datos externos como los recibidos desde Scryfall.
+
+### Tailwind CSS
+
+Tailwind permite construir la interfaz con rapidez, mantener consistencia visual y evitar una hoja de estilos global difícil de escalar.
+
+### Three.js + React Three Fiber + Drei
+
+Capricho personal, Three.js aporta el motor 3D. React Three Fiber facilita integrarlo en React, y Drei añade utilidades listas para usar que aceleran el desarrollo del visor de cartas.
+
+### Drizzle ORM + MySQL local
+
+Drizzle ofrece consultas tipadas y parametrizadas. MySQL mediante WAMP permite desarrollar en local con una base de datos accesible y conocida durante las primeras fases.
+
+### Turso en producción
+
+La idea es migrar a Turso más adelante para disponer de una base de datos distribuida, fácil de desplegar y nativa de vercel.
+
+### better-auth
+
+better-auth se usará para gestionar sesiones y restringir la colección privada de cada usuario sin construir autenticación desde cero.
+
+### Zod
+
+Zod permitirá validar datos de entrada antes de escribir en base de datos o consumirlos dentro de la aplicación.
+
+## Documentación de uso de IA
+
+El archivo `AI_LOG.md` registra qué partes fueron generadas con ayuda de IA, qué prompt se usó y qué correcciones que se pidieron.
