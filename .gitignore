@@ -12,7 +12,6 @@
 
 # testing
 /coverage
-AI_LOG.md
 
 # next.js
 /.next/
@@ -21,7 +20,7 @@ AI_LOG.md
 # production
 /build
 /docs
-scryfall.test.ts
+*.test.ts
 
 
 # misc

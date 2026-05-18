@@ -10,7 +10,9 @@ Proyecto en fase inicial, con **Fase 1** y **Fase 2** completadas.
 - Estructura activa alineada bajo `src/`.
 - Búsqueda real de cartas conectada a Scryfall.
 - Página funcional disponible en `/search`.
-- Resultados mostrados como listado de texto con nombre y rareza.
+- Resultados mostrados en una rejilla responsive con imagen, nombre y rareza.
+- Vista previa 3D inicial al pulsar una carta de búsqueda.
+- Modal con fondo atenuado y giro manual de la carta con el ratón.
 - Límite de resultados aplicado para evitar listados demasiado grandes.
 - Soporte interno para cartas de doble cara en el servicio de Scryfall.
 
@@ -65,10 +67,13 @@ Abre:
 http://localhost:3000/search
 ```
 
-Escribe el nombre de una carta y envía el formulario. La aplicación consulta Scryfall y muestra un listado funcional de resultados con:
+Escribe el nombre de una carta y envía el formulario. La aplicación consulta Scryfall y muestra una rejilla responsive de resultados con:
 
+- imagen
 - nombre
 - rareza
+
+Pulsa una carta con imagen para abrir su vista previa 3D. En la vista 3D puedes arrastrar desde cualquier punto del visor para girar la carta, usar la rueda del ratón para acercar o alejar la cámara y cerrar la vista con la X, el fondo oscuro o la tecla Escape.
 
 Ejemplo:
 
