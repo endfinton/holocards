@@ -4,91 +4,26 @@ HoloCard Vault 3D es una plataforma web en construccion para buscar, visualizar 
 
 ## Estado actual
 
-Proyecto con **Fases 1, 2, 3, 4 y 5 completadas**.
-
-Completado:
-
-- Proyecto Next.js creado con TypeScript, Tailwind y ESLint.
-- Estructura activa bajo `src/`.
-- Busqueda real de cartas conectada a Scryfall.
-- Pagina funcional disponible en `/search`.
-- Resultados mostrados en una rejilla responsive con imagen, nombre y rareza.
-- Contador de cartas encontradas en la busqueda.
-- Visor 3D al pulsar una carta con imagen.
-- Visor 3D a pantalla completa.
-- Giro manual de la carta arrastrando desde cualquier punto del visor.
-- Zoom con rueda del raton mediante camara 3D.
-- Cierre del visor solo mediante boton `X` o tecla `Escape`.
-- Scroll de la pagina bloqueado mientras el visor esta abierto.
-- Proxy local `/api/card-image` para usar imagenes de Scryfall como texturas WebGL sin problemas de CORS.
-- Efecto foil shader en cartas de rareza `rare` y `mythic`.
-- Base de datos local MySQL configurada con Drizzle.
-- Base `holocard_db` creada en WAMP MySQL.
-- Esquema inicial `collection_cards` sincronizado en WAMP(local).
-- Migracion Drizzle generada en `drizzle/0000_init_collection_cards.sql`.
-- Preparacion documentada para migrar a Turso/libSQL mas adelante.
-- Autenticacion base configurada con `better-auth` y adaptador Drizzle.
-- Ruta API `/api/auth/[...all]` preparada para login, registro y sesiones.
-- Tablas `user`, `session`, `account` y `verification` creadas en MySQL local.
-- Migracion Drizzle generada en `drizzle/0001_add_auth_tables.sql`.
-- Pagina `/login` creada con formulario alternable de entrar / crear cuenta.
-- Home inicial reemplazada por una portada simple con enlaces a busqueda, boveda y login.
-- Saludo de sesion `Hola! nombre` y boton `Logout` en home, busqueda y boveda.
-- Ruta `/collection` creada y protegida por sesion.
-- Cartas de la boveda abren el mismo visor ThreeJS que la busqueda.
-- Endpoint `/api/collection` creado para listar y guardar cartas del usuario autenticado.
-- Boton `Guardar en boveda` anadido a los resultados de busqueda.
-- Boton pequeno `Eliminar` anadido a cada carta guardada en la boveda.
-- Indice unico por usuario y carta en `collection_cards` para evitar duplicados.
-- Migracion Drizzle generada en `drizzle/0002_collection_user_unique.sql`.
+Proyecto practicamente acabado, terminando el deploy en Vercel, Turso y explorando nuevas funcionalidades.
 
 Pendiente:
 
 - Mejorar estado de sesion visible en navegacion.
 - CSS y pulido visual final.
-- Despliegue en Vercel.
+- Añadir búsqueda por idiomas (inglés y español).
+- Mejorar ThreeJS en móviles.
+- Panel de administrador para controlar los usuarios registrados (e ir añadiendo funciones).
 
-## Como ejecutar el proyecto
 
-### Requisitos
-
-- Node.js
-- pnpm
-- WAMP o XAMPP Server con MySQL activo
-
-### Instalacion
-
-```bash
-pnpm install
-```
-
-### Desarrollo
-
-```bash
-pnpm dev
-```
-
-Luego abre:
+### Funcionamiento
 
 ```text
-http://localhost:3000
-```
-
-### Compilacion
-
-```bash
-pnpm build
+https://holocards.vercel.app/
 ```
 
 ## Como interactuar con la aplicacion
 
 ### Busqueda de cartas
-
-Abre:
-
-```text
-http://localhost:3000/search
-```
 
 Escribe el nombre de una carta y envia el formulario. La aplicacion consulta Scryfall y muestra una rejilla responsive de resultados con:
 
@@ -96,14 +31,6 @@ Escribe el nombre de una carta y envia el formulario. La aplicacion consulta Scr
 - nombre
 - rareza
 - boton `Guardar en boveda`
-
-Tambien muestra cuantas cartas se han encontrado en la respuesta actual.
-
-Ejemplo:
-
-```text
-http://localhost:3000/search?q=ring
-```
 
 ### Visor 3D
 
@@ -122,12 +49,6 @@ Las cartas de rareza `rare` y `mythic` usan un shader foil. Las demas rarezas us
 
 ### Autenticacion
 
-Abre:
-
-```text
-http://localhost:3000/login
-```
-
 Desde esa pantalla puedes:
 
 - crear una cuenta con nombre, email y contrasena
@@ -137,14 +58,6 @@ Desde esa pantalla puedes:
 Al completar correctamente el formulario, la aplicacion redirige a `/search`.
 
 ### Boveda / coleccion
-
-Abre:
-
-```text
-http://localhost:3000/collection
-```
-
-Si no hay sesion activa, la aplicacion redirige a `/login`.
 
 Desde `/search`, cada carta muestra el boton `Guardar en boveda`. Al pulsarlo:
 
@@ -166,7 +79,7 @@ TypeScript reduce errores tempranos y hace mas claro el contrato entre servicios
 
 ### Tailwind CSS
 
-Tailwind queda instalado desde el inicio, aunque el pulido visual completo se reserva para una fase posterior.
+Se ha elegido Tailwind CSS por su enfoque utility-first, que permite un desarrollo de UI extremadamente rápido, consistente y mantenible. Su uso facilita la creación de diseños responsivos complejos, optimizando el flujo de trabajo al evitar la fragmentación en múltiples archivos CSS externos.
 
 ### Scryfall
 
@@ -199,15 +112,6 @@ El esquema `collection_cards` almacena cartas guardadas por usuario mediante `us
 
 Las migraciones Turso viven en `drizzle-turso/`. Las migraciones antiguas MySQL viven en `drizzle/` como historico de desarrollo local.
 
-Variables necesarias:
-
-```env
-TURSO_DATABASE_URL=
-TURSO_AUTH_TOKEN=
-BETTER_AUTH_SECRET=
-BETTER_AUTH_URL=
-```
-
 ### better-auth
 
 `better-auth` queda configurado como capa de autenticacion base.
@@ -218,41 +122,11 @@ La configuracion vive en:
 - `src/lib/auth-client.ts`
 - `src/app/api/auth/[...all]/route.ts`
 
-Las tablas de auth viven en `src/db/schema.ts` y se sincronizan mediante Drizzle con MySQL local. La UI inicial vive en `/login`.
+Las tablas de auth viven en `src/db/schema.ts` y se sincronizan mediante Drizzle con Turso. La UI inicial vive en `/login`.
 
 ### Zod
 
 Zod valida el payload de guardado en `/api/collection` antes de escribir en base de datos.
-
-## Deploy en Vercel
-
-El proyecto queda preparado para Vercel. Hay que configurar estas variables en Project Settings > Environment Variables:
-
-```env
-TURSO_DATABASE_URL=libsql://database-celeste-notebook-vercel-icfg-tnzgwvj7klqa2gjtuyamhj6s.aws-us-east-1.turso.io
-TURSO_AUTH_TOKEN=<token privado de Turso>
-BETTER_AUTH_SECRET=<secreto privado>
-BETTER_AUTH_URL=https://<dominio-final-de-vercel>
-```
-
-Notas:
-
-- `TURSO_DATABASE_URL` puede estar en formato `libsql://`; la app lo normaliza internamente a `https://` para el cliente libSQL.
-- `BETTER_AUTH_URL` debe apuntar al dominio final desplegado. Para preview, Vercel tambien expone `VERCEL_URL` y la app lo usa como fallback.
-- No subir `.env.local` al repositorio.
-- El esquema remoto ya fue aplicado con `drizzle-kit push --force`.
-
-Comandos utiles si se usa Vercel CLI:
-
-```bash
-pnpm dlx vercel login
-pnpm dlx vercel link
-pnpm dlx vercel env add TURSO_DATABASE_URL production
-pnpm dlx vercel env add TURSO_AUTH_TOKEN production
-pnpm dlx vercel env add BETTER_AUTH_SECRET production
-pnpm dlx vercel env add BETTER_AUTH_URL production
-pnpm dlx vercel --prod
-```
 
 ## Documentacion de uso de IA
 
