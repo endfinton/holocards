@@ -38,12 +38,12 @@ Completado:
 - Cartas de la boveda abren el mismo visor ThreeJS que la busqueda.
 - Endpoint `/api/collection` creado para listar y guardar cartas del usuario autenticado.
 - Boton `Guardar en boveda` anadido a los resultados de busqueda.
+- Boton pequeno `Eliminar` anadido a cada carta guardada en la boveda.
 - Indice unico por usuario y carta en `collection_cards` para evitar duplicados.
 - Migracion Drizzle generada en `drizzle/0002_collection_user_unique.sql`.
 
 Pendiente:
 
-- Eliminar cartas de la boveda.
 - Mejorar estado de sesion visible en navegacion.
 - CSS y pulido visual final.
 - Despliegue en Vercel.
@@ -152,7 +152,7 @@ Desde `/search`, cada carta muestra el boton `Guardar en boveda`. Al pulsarlo:
 - si el usuario esta autenticado, se guarda la carta en `collection_cards`
 - si la carta ya existia para ese usuario, se actualiza sin crear duplicado
 
-La coleccion muestra las cartas guardadas del usuario actual. Al pulsar una carta con imagen, se abre el mismo visor ThreeJS fullscreen usado en la busqueda.
+La coleccion muestra las cartas guardadas del usuario actual. Al pulsar una carta con imagen, se abre el mismo visor ThreeJS fullscreen usado en la busqueda. Cada carta guardada incluye un boton pequeno `Eliminar` para quitarla de la boveda.
 
 ## Decisiones tecnicas
 
@@ -191,27 +191,21 @@ La Fase 3 incluye:
 
 Esta eleccion ha sido puramente personal, descubri esta libreria hace un tiempo y queria hacer un proyecto usandola.
 
-### Drizzle ORM + MySQL local
+### Drizzle ORM + Turso/libSQL
 
-Drizzle ofrece consultas tipadas y parametrizadas.
+Drizzle ofrece consultas tipadas y parametrizadas. La aplicacion usa `drizzle-orm/libsql`, `@libsql/client` y tablas SQLite compatibles con Turso.
 
 El esquema `collection_cards` almacena cartas guardadas por usuario mediante `user_id`. Ademas tiene un indice unico compuesto por `user_id` y `scryfall_id` para evitar duplicados por usuario.
 
-### Turso en produccion
+Las migraciones Turso viven en `drizzle-turso/`. Las migraciones antiguas MySQL viven en `drizzle/` como historico de desarrollo local.
 
-La idea es migrar a Turso mas adelante para disponer de una base de datos distribuida y facil de desplegar.
-
-Cuando llegue ese cambio, habra que sustituir:
-
-- `mysql-core` por `sqlite-core`
-- `mysql2` por `@libsql/client`
-- `drizzle-orm/mysql2` por `drizzle-orm/libsql`
-
-Las variables previstas ya quedan documentadas en `.env.local`:
+Variables necesarias:
 
 ```env
-TURSO_CONNECTION_URL=
+TURSO_DATABASE_URL=
 TURSO_AUTH_TOKEN=
+BETTER_AUTH_SECRET=
+BETTER_AUTH_URL=
 ```
 
 ### better-auth
@@ -229,6 +223,36 @@ Las tablas de auth viven en `src/db/schema.ts` y se sincronizan mediante Drizzle
 ### Zod
 
 Zod valida el payload de guardado en `/api/collection` antes de escribir en base de datos.
+
+## Deploy en Vercel
+
+El proyecto queda preparado para Vercel. Hay que configurar estas variables en Project Settings > Environment Variables:
+
+```env
+TURSO_DATABASE_URL=libsql://database-celeste-notebook-vercel-icfg-tnzgwvj7klqa2gjtuyamhj6s.aws-us-east-1.turso.io
+TURSO_AUTH_TOKEN=<token privado de Turso>
+BETTER_AUTH_SECRET=<secreto privado>
+BETTER_AUTH_URL=https://<dominio-final-de-vercel>
+```
+
+Notas:
+
+- `TURSO_DATABASE_URL` puede estar en formato `libsql://`; la app lo normaliza internamente a `https://` para el cliente libSQL.
+- `BETTER_AUTH_URL` debe apuntar al dominio final desplegado. Para preview, Vercel tambien expone `VERCEL_URL` y la app lo usa como fallback.
+- No subir `.env.local` al repositorio.
+- El esquema remoto ya fue aplicado con `drizzle-kit push --force`.
+
+Comandos utiles si se usa Vercel CLI:
+
+```bash
+pnpm dlx vercel login
+pnpm dlx vercel link
+pnpm dlx vercel env add TURSO_DATABASE_URL production
+pnpm dlx vercel env add TURSO_AUTH_TOKEN production
+pnpm dlx vercel env add BETTER_AUTH_SECRET production
+pnpm dlx vercel env add BETTER_AUTH_URL production
+pnpm dlx vercel --prod
+```
 
 ## Documentacion de uso de IA
 

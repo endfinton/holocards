@@ -1,77 +1,116 @@
+﻿import { sql } from "drizzle-orm";
 import {
-  boolean,
-  int,
-  mysqlTable,
+  integer,
+  sqliteTable,
   text,
-  timestamp,
   uniqueIndex,
-  varchar,
-} from "drizzle-orm/mysql-core";
+} from "drizzle-orm/sqlite-core";
 
-export const user = mysqlTable("user", {
-  id: varchar("id", { length: 191 }).primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
-  email: varchar("email", { length: 191 }).notNull().unique(),
-  emailVerified: boolean("email_verified").notNull().default(false),
-  image: varchar("image", { length: 1024 }),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
+export const user = sqliteTable("user", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  emailVerified: integer("email_verified", { mode: "boolean" })
+    .notNull()
+    .default(false),
+  image: text("image"),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`)
+    .$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`)
+    .$defaultFn(() => new Date())
+    .$onUpdateFn(() => new Date()),
 });
 
-export const session = mysqlTable("session", {
-  id: varchar("id", { length: 191 }).primaryKey(),
-  expiresAt: timestamp("expires_at").notNull(),
-  token: varchar("token", { length: 191 }).notNull().unique(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
-  ipAddress: varchar("ip_address", { length: 255 }),
-  userAgent: varchar("user_agent", { length: 1024 }),
-  userId: varchar("user_id", { length: 191 })
+export const session = sqliteTable("session", {
+  id: text("id").primaryKey(),
+  expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
+  token: text("token").notNull().unique(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`)
+    .$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`)
+    .$defaultFn(() => new Date())
+    .$onUpdateFn(() => new Date()),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
 });
 
-export const account = mysqlTable("account", {
-  id: varchar("id", { length: 191 }).primaryKey(),
-  accountId: varchar("account_id", { length: 255 }).notNull(),
-  providerId: varchar("provider_id", { length: 255 }).notNull(),
-  userId: varchar("user_id", { length: 191 })
+export const account = sqliteTable("account", {
+  id: text("id").primaryKey(),
+  accountId: text("account_id").notNull(),
+  providerId: text("provider_id").notNull(),
+  userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
   idToken: text("id_token"),
-  accessTokenExpiresAt: timestamp("access_token_expires_at"),
-  refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
-  scope: varchar("scope", { length: 1024 }),
+  accessTokenExpiresAt: integer("access_token_expires_at", {
+    mode: "timestamp",
+  }),
+  refreshTokenExpiresAt: integer("refresh_token_expires_at", {
+    mode: "timestamp",
+  }),
+  scope: text("scope"),
   password: text("password"),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`)
+    .$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`)
+    .$defaultFn(() => new Date())
+    .$onUpdateFn(() => new Date()),
 });
 
-export const verification = mysqlTable("verification", {
-  id: varchar("id", { length: 191 }).primaryKey(),
-  identifier: varchar("identifier", { length: 255 }).notNull(),
+export const verification = sqliteTable("verification", {
+  id: text("id").primaryKey(),
+  identifier: text("identifier").notNull(),
   value: text("value").notNull(),
-  expiresAt: timestamp("expires_at").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
+  expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`)
+    .$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`)
+    .$defaultFn(() => new Date())
+    .$onUpdateFn(() => new Date()),
 });
 
-export const collectionCards = mysqlTable(
+export const collectionCards = sqliteTable(
   "collection_cards",
   {
-    id: int("id").primaryKey().autoincrement(),
-    scryfallId: varchar("scryfall_id", { length: 48 }).notNull(),
-    userId: varchar("user_id", { length: 191 }).references(() => user.id, {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    scryfallId: text("scryfall_id").notNull(),
+    userId: text("user_id").references(() => user.id, {
       onDelete: "cascade",
     }),
-    name: varchar("name", { length: 255 }).notNull(),
-    rarity: varchar("rarity", { length: 32 }).notNull(),
-    imageUrl: varchar("image_url", { length: 1024 }),
-    isFoil: boolean("is_foil").notNull().default(false),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
+    name: text("name").notNull(),
+    rarity: text("rarity").notNull(),
+    imageUrl: text("image_url"),
+    isFoil: integer("is_foil", { mode: "boolean" }).notNull().default(false),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`)
+      .$defaultFn(() => new Date()),
+    updatedAt: integer("updated_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`)
+      .$defaultFn(() => new Date())
+      .$onUpdateFn(() => new Date()),
   },
   (table) => [
     uniqueIndex("collection_cards_user_scryfall_unique").on(

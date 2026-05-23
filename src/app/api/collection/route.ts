@@ -8,11 +8,15 @@ import { collectionCards } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 const saveCardSchema = z.object({
-  scryfallId: z.string().min(1).max(64),
+  scryfallId: z.string().min(1).max(48),
   name: z.string().min(1).max(255),
   rarity: z.string().min(1).max(32),
   imageUrl: z.string().url().max(1024).nullable(),
   isFoil: z.boolean().optional(),
+});
+
+const deleteCardSchema = z.object({
+  scryfallId: z.string().min(1).max(48),
 });
 
 async function getCurrentUserId() {
@@ -69,7 +73,8 @@ export async function POST(request: Request) {
       imageUrl: card.imageUrl,
       isFoil,
     })
-    .onDuplicateKeyUpdate({
+    .onConflictDoUpdate({
+      target: [collectionCards.userId, collectionCards.scryfallId],
       set: {
         name: card.name,
         rarity: card.rarity,
@@ -90,4 +95,32 @@ export async function POST(request: Request) {
     .limit(1);
 
   return NextResponse.json({ card: savedCard }, { status: 201 });
+}
+
+export async function DELETE(request: Request) {
+  const userId = await getCurrentUserId();
+
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const parsed = deleteCardSchema.safeParse(await request.json());
+
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Invalid delete payload" },
+      { status: 400 },
+    );
+  }
+
+  await db
+    .delete(collectionCards)
+    .where(
+      and(
+        eq(collectionCards.userId, userId),
+        eq(collectionCards.scryfallId, parsed.data.scryfallId),
+      ),
+    );
+
+  return NextResponse.json({ success: true });
 }
