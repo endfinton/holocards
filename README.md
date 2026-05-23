@@ -24,7 +24,7 @@ Completado:
 - Efecto foil shader en cartas de rareza `rare` y `mythic`.
 - Base de datos local MySQL configurada con Drizzle.
 - Base `holocard_db` creada en WAMP MySQL.
-- Esquema inicial `collection_cards` sincronizado en WAMP.
+- Esquema inicial `collection_cards` sincronizado en WAMP(local).
 - Migracion Drizzle generada en `drizzle/0000_init_collection_cards.sql`.
 - Preparacion documentada para migrar a Turso/libSQL mas adelante.
 - Autenticacion base configurada con `better-auth` y adaptador Drizzle.
@@ -33,6 +33,7 @@ Completado:
 - Migracion Drizzle generada en `drizzle/0001_add_auth_tables.sql`.
 - Pagina `/login` creada con formulario alternable de entrar / crear cuenta.
 - Home inicial reemplazada por una portada simple con enlaces a busqueda, boveda y login.
+- Saludo de sesion `Hola! nombre` y boton `Logout` en home, busqueda y boveda.
 - Ruta `/collection` creada y protegida por sesion.
 - Cartas de la boveda abren el mismo visor ThreeJS que la busqueda.
 - Endpoint `/api/collection` creado para listar y guardar cartas del usuario autenticado.
@@ -188,7 +189,7 @@ La Fase 3 incluye:
 - visor fullscreen
 - shader foil para `rare` y `mythic`
 
-Esta eleccion ha sido puramente personal: descubri esta libreria hace un tiempo y queria hacer un proyecto usandola.
+Esta eleccion ha sido puramente personal, descubri esta libreria hace un tiempo y queria hacer un proyecto usandola.
 
 ### Drizzle ORM + MySQL local
 

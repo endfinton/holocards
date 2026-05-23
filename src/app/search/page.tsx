@@ -1,11 +1,10 @@
-import { searchCards, type CardSearchResult } from "@/services/scryfall";
-import { SearchResultsGrid } from "@/components/search/SearchResultsGrid";
+import { headers } from "next/headers";
+import Link from "next/link";
 
-const searchPageLinks = [
-  { href: "/", label: "Inicio" },
-  { href: "/collection", label: "Mi bóveda" },
-  { href: "/login", label: "Entrar" },
-];
+import { SessionGreeting } from "@/components/auth/SessionGreeting";
+import { SearchResultsGrid } from "@/components/search/SearchResultsGrid";
+import { auth } from "@/lib/auth";
+import { searchCards, type CardSearchResult } from "@/services/scryfall";
 
 type SearchPageProps = {
   searchParams: Promise<{
@@ -16,6 +15,12 @@ type SearchPageProps = {
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const { q = "" } = await searchParams;
   const query = q.trim();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const authLink = session
+    ? { href: "/collection", label: "Mi Boveda" }
+    : { href: "/login", label: "Login" };
 
   let cards: CardSearchResult[] = [];
   let hasError = false;
@@ -39,17 +44,22 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             <h1 className="mt-3 text-4xl font-black">Buscar cartas</h1>
           </div>
           <nav className="flex flex-wrap gap-3 text-sm font-bold">
-            {searchPageLinks.map((link) => (
-              <a
-                className="rounded-full border border-white/15 px-5 py-2 transition hover:border-fuchsia-300 hover:text-fuchsia-200"
-                href={link.href}
-                key={link.href}
-              >
-                {link.label}
-              </a>
-            ))}
+            <Link
+              className="rounded-full border border-white/15 px-5 py-2 transition hover:border-fuchsia-300 hover:text-fuchsia-200"
+              href="/"
+            >
+              Inicio
+            </Link>
+            <Link
+              className="rounded-full border border-white/15 px-5 py-2 transition hover:border-fuchsia-300 hover:text-fuchsia-200"
+              href={authLink.href}
+            >
+              {authLink.label}
+            </Link>
           </nav>
         </header>
+
+        {session && <SessionGreeting name={session.user.name} />}
 
         <form action="/search" className="flex flex-col gap-3 sm:flex-row">
           <label className="sr-only" htmlFor="q">
@@ -74,12 +84,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
         {hasError && (
           <p className="rounded-2xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-red-200">
-            No se pudo completar la búsqueda. Inténtalo de nuevo.
+            No se pudo completar la busqueda. Intentalo de nuevo.
           </p>
         )}
 
         {query && !hasError && cards.length === 0 && (
-          <p className="text-zinc-400">No se encontraron cartas para “{query}”.</p>
+          <p className="text-zinc-400">No se encontraron cartas para {query}.</p>
         )}
 
         {cards.length > 0 && (

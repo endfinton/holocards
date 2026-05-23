@@ -1,8 +1,9 @@
-﻿import { desc, eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { SessionGreeting } from "@/components/auth/SessionGreeting";
 import { CollectionGrid } from "@/components/collection/CollectionGrid";
 import { db } from "@/db";
 import { collectionCards } from "@/db/schema";
@@ -37,9 +38,9 @@ export default async function CollectionPage() {
         <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.35em] text-fuchsia-300">
-              Tu bóveda
+              Tu boveda
             </p>
-            <h1 className="mt-3 text-4xl font-black">Colección guardada</h1>
+            <h1 className="mt-3 text-4xl font-black">Coleccion guardada</h1>
             <p className="mt-2 text-zinc-400">
               {cards.length} {cards.length === 1 ? "carta guardada" : "cartas guardadas"}
             </p>
@@ -60,17 +61,19 @@ export default async function CollectionPage() {
           </nav>
         </header>
 
+        <SessionGreeting name={session.user.name} />
+
         {cards.length === 0 ? (
           <div className="rounded-3xl border border-white/10 bg-white/[0.05] p-10 text-center">
-            <h2 className="text-2xl font-bold">Todavía no hay cartas aquí.</h2>
+            <h2 className="text-2xl font-bold">Todavia no hay cartas aqui.</h2>
             <p className="mt-3 text-zinc-400">
-              Busca una carta y pulsa “Guardar en bóveda” para empezar tu colección.
+              Busca una carta y pulsa Guardar en boveda para empezar tu coleccion.
             </p>
             <Link
               className="mt-6 inline-flex rounded-full bg-fuchsia-300 px-6 py-3 font-bold text-zinc-950 transition hover:bg-fuchsia-200"
               href="/search"
             >
-              Ir a búsqueda
+              Ir a busqueda
             </Link>
           </div>
         ) : (
