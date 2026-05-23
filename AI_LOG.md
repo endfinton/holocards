@@ -1,18 +1,22 @@
 # AI Log
 
-Este archivo registra el uso de IA dentro del proyecto para mantener trazabilidad sobre qué se generó, qué se pidió y qué ajustes humanos se solicitaron después.
+Este archivo registra el uso de IA dentro del proyecto para mantener trazabilidad sobre que se genero, que se pidio y que ajustes humanos se solicitaron despues.
 
-## Cómo usar esta bitácora
+## Como usar esta bitacora
 
-- Añadir una fila cada vez que la IA genere o modifique una parte relevante del proyecto.
+- Anadir una fila cada vez que la IA genere o modifique una parte relevante del proyecto.
 - Copiar el prompt de forma fiel o resumirlo solo si contiene datos sensibles.
-- Registrar las correcciones posteriores del usuario, aunque sean pequeñas.
+- Registrar las correcciones posteriores del usuario, aunque sean pequenas.
 
-| Fecha | Componente / Función | Prompt | Correcciones solicitadas |
+| Fecha | Componente / Funcion | Prompt | Correcciones solicitadas |
 | --- | --- | --- | --- |
-| 2026-05-14 | Creación del plan del proyecto, diseño de fases, `README.md` y `AI_LOG.md`; instalación de dependencias necesarias y Three.js | — | — |
-| 2026-05-17 | Estructura inicial `src/app`, `README.md`, `AI_LOG.md` | “crea los archivos de la estructura pero vacios, menos readme.md y ai_log.md esos crealos con normalidad” | Crear solo estructura vacía y documentación útil. |
-| 2026-05-18 | Modal de vista previa 3D con Three.js en `/search` | “cuando clickes en una carta del resultado se atenue la pantalla y salga en el centro la carta ya con las funciones de threejs, estatica, que puedas girarla con el click pulsado del raton” | Usar modal sin URL propia; dejar foil para una iteración posterior. |
-| 2026-05-18 | Proxy local de imágenes para texturas 3D | Error en runtime al cargar imágenes remotas de Scryfall como textura Three.js | Servir texturas desde `/api/card-image` porque `cards.scryfall.io` no expone CORS para WebGL. |
-| 2026-05-18 | Controles ampliados del visor 3D | “se pueda clicar en toda la superficie de la pantalla para girar la carta y poder usar la rueda del ratón para hacer zoom en la carta, el botón de cerrar para salir que sea más grande y esté casi en la esquina superior derecha” | Mover la cámara con la rueda; trasladar la interacción global al visor completo. |
-| 2026-05-18 | Control de scroll del body al abrir/cerrar modal 3D | Modal 3D impedía hacer scroll en la lista de resultados subyacente | Añadir `document.body.style.overflow` en el modal; restaurar al cerrar. |
+| 2026-05-14 | Creacion del plan del proyecto, diseno de fases, `README.md` y `AI_LOG.md`; instalacion de dependencias necesarias y Three.js | - | - |
+| 2026-05-17 | Estructura inicial `src/app`, `README.md`, `AI_LOG.md` | "crea los archivos de la estructura pero vacios, menos readme.md y ai_log.md esos crealos con normalidad" | Crear solo estructura vacia y documentacion util. |
+| 2026-05-18 | Modal de vista previa 3D con Three.js en `/search` | "cuando clickes en una carta del resultado se atenue la pantalla y salga en el centro la carta ya con las funciones de threejs, estatica, que puedas girarla con el click pulsado del raton" | Usar modal sin URL propia; dejar foil para una iteracion posterior. |
+| 2026-05-18 | Proxy local de imagenes para texturas 3D | Error en runtime al cargar imagenes remotas de Scryfall como textura Three.js | Servir texturas desde `/api/card-image` porque `cards.scryfall.io` no expone CORS para WebGL. |
+| 2026-05-18 | Controles ampliados del visor 3D | "se pueda clicar en toda la superficie de la pantalla para girar la carta y poder usar la rueda del raton para hacer zoom en la carta" | Mover la camara con la rueda; trasladar la interaccion global al visor completo. |
+| 2026-05-18 | Control de scroll del body al abrir/cerrar modal 3D | Modal 3D impedia hacer scroll en la lista de resultados subyacente | Anadir `document.body.style.overflow` en el modal; restaurar al cerrar. |
+| 2026-05-18 | Shader foil sutil para rare y mythic | "para acabar fase 3, anadiremos el efecto foil a las cartas de rareza rare o superior" | Elegir efecto sutil y aplicarlo solo a rarezas `rare` y `mythic`. |
+| 2026-05-23 | Fase 4: Drizzle + MySQL local WAMP | "configuraremos el .env y definiremos el esquema usando drizzle dejandolo sincronizado y preparado para migar a turso cuando sea necesario" | Detectar que WAMP acepta `root` sin contrasena; crear `.env.local`, `drizzle.config.ts`, `src/db/schema.ts`, `src/db/index.ts`, sincronizar `collection_cards` y documentar futuro Turso. |
+| 2026-05-23 | Fase 5: better-auth + Drizzle | "empecemos con la fase 5, integremos betther-auth usando email y contraseña, creando un /login que debe acceder a la boveda" | Anadir `@better-auth/drizzle-adapter`, crear config server/client, ruta `/api/auth/[...all]`, tablas `user`, `session`, `account`, `verification`, migracion `0001_add_auth_tables` y sincronizacion en MySQL local. |
+| 2026-05-23 | Visor ThreeJS en boveda | "la boveda tambien tiene que tener threejs tal como lo tiene en la busqueda" | Crear `CollectionGrid` cliente y reutilizar `CardPreviewModal` para abrir las cartas guardadas en el visor ThreeJS fullscreen. |

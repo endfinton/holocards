@@ -45,7 +45,11 @@ export function CardPreviewModal({ card, onClose }: CardPreviewModalProps) {
       </button>
 
       <div className="h-full w-full">
-        <CardScene imageUrl={card.imageUrl} cardName={card.name} />
+        <CardScene
+          imageUrl={card.imageUrl}
+          cardName={card.name}
+          rarity={card.rarity}
+        />
       </div>
     </div>
   );

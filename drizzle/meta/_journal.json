@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1779568263788,
+      "tag": "0000_init_collection_cards",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1779569464396,
+      "tag": "0001_add_auth_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1779571125123,
+      "tag": "0002_collection_user_unique",
+      "breakpoints": true
+    }
+  ]
+}

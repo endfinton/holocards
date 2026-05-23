@@ -1,0 +1,3 @@
+ALTER TABLE `collection_cards` MODIFY COLUMN `scryfall_id` varchar(48) NOT NULL;--> statement-breakpoint
+ALTER TABLE `collection_cards` ADD CONSTRAINT `collection_cards_user_scryfall_unique` UNIQUE(`user_id`,`scryfall_id`);--> statement-breakpoint
+ALTER TABLE `collection_cards` ADD CONSTRAINT `collection_cards_user_id_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE cascade ON UPDATE no action;

@@ -10,9 +10,14 @@ import { toCardTextureUrl } from "@/lib/card-image";
 type CardSceneProps = {
   imageUrl: string | null;
   cardName: string;
+  rarity: string;
 };
 
-export function CardScene({ imageUrl, cardName }: CardSceneProps) {
+export function CardScene({
+  imageUrl,
+  cardName,
+  rarity,
+}: CardSceneProps) {
   const [rotation, setRotation] = useState<[number, number, number]>([
     0, 0, 0,
   ]);
@@ -71,6 +76,7 @@ export function CardScene({ imageUrl, cardName }: CardSceneProps) {
             imageUrl={toCardTextureUrl(imageUrl)}
             cardName={cardName}
             rotation={rotation}
+            rarity={rarity}
           />
         </Suspense>
       </Canvas>
