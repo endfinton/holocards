@@ -2,19 +2,6 @@
 
 HoloCard Vault 3D es una plataforma web en construccion para buscar, visualizar y coleccionar cartas de **Magic: The Gathering**. El objetivo es combinar busqueda real con Scryfall, visor 3D con efecto foil, base de datos local con Drizzle, autenticacion y coleccion privada.
 
-## Estado actual
-
-Proyecto practicamente acabado, terminando el deploy en Vercel, Turso y explorando nuevas funcionalidades.
-
-Pendiente:
-
-- Mejorar estado de sesion visible en navegacion.
-- CSS y pulido visual final.
-- Añadir búsqueda por idiomas (inglés y español).
-- Mejorar ThreeJS en móviles.
-- Panel de administrador para controlar los usuarios registrados (e ir añadiendo funciones).
-
-
 ### Funcionamiento
 
 ```text
